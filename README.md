@@ -1,8 +1,9 @@
-# CPSC449-Proj2
+# CPSC449-Proj3
 
 #### Brian Fang (brian.fang@csu.fullerton.edu)
 #### Nathan Tran (ntran402@csu.fullerton.edu)
 #### Ashkon Yavarinia (ashkon@csu.fullerton.edu)
+#### Edgar Cruz (ed.cruz76@csu.fullerton.edu)
 
 ## Setup
 >```shell-session
@@ -23,7 +24,7 @@
 
 >```shell-session
 >$ bash ./bin/init.sh
->$ foreman start -m users=1,posts=3
+>$ foreman start -m users=1,posts=3,likes=1
 >```
 Note- You may need to change file permissions to run/edit files
 
@@ -78,14 +79,14 @@ Retweets a post specified by *retweet_id*
 **GET:** /posts/{postId}   
 Retrieves a post by its *postId*
 > ```shell-session
-> $ http GET localhost:80/posts/{postId} 
+> $ http GET localhost:80/posts/{postId}
 > ```
 
 ## - Retrieve all tweets
 **GET:** /posts   
 Retrieves all posts
 > ```shell-session
-> $ http GET localhost:80/posts 
+> $ http GET localhost:80/posts
 > ```
 
 ## - Retrieve user timeline
@@ -108,4 +109,35 @@ ex: users_followed="Ashkon,BrianFang2"
 Retrieves a list of all posts in reverse chronological order
 > ```shell-session
 > $ http GET localhost:80/posts/timeline/public
+> ```
+
+---
+# Likes
+
+## - Liking Tweets
+**POST:** /{username}/{tweetId}  
+Likes a specific post as a given user and updates redis values  
+> ```shell-session
+> $ http POST localhost:5200/Ashkon/5
+> ```
+
+## - Retrieve tweets that a user liked
+**GET:** /{username}/liked_posts  
+Retrieves a list of all the posts that a given user has liked  
+> ```shell-session
+> $ http GET localhost:5200/Ashkon/liked_posts
+> ```
+
+## - Retrieve likes for a tweet
+**GET:** /posts/{tweetId}/likes  
+Retrieves a list of all the users that liked a given post as well as the total number of likes  
+> ```shell-session
+> $ http GET localhost:5200/posts/4/likes
+> ```
+
+## - Retrieve popular posts
+**GET:** /posts/popular_posts  
+Retrieves the most popular posts in the service. Shows posts with more liked first   
+> ```shell-session
+> $ http GET localhost:5200/posts/popular_posts
 > ```
