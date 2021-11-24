@@ -8,14 +8,13 @@
 
 import configparser
 import logging.config
+import os
+import socket
 
 import hug
-from hug.directives import user
 import sqlite_utils
-import sqlite3
 import requests
 import json
-import datetime
 
 # Load configuration
 #
@@ -37,7 +36,7 @@ def log(name=__name__, **kwargs):
 
 # Authorization function
 def auth(username, password):
-	r = requests.get(f"http://localhost:5000/users/{username}")
+	r = requests.get(config["users"]["url"]+username)
 	temp = json.loads(r.text)
 	user = temp["users"][0]
 	if user["password"] == password:
@@ -83,12 +82,12 @@ def home_timeline(
 # Returns an array of public posts
 @hug.get("/posts/timeline/public")
 def public_timeline(response, db: sqlite):
-	timeline = []
-	tweets = db["posts"] 
-	for tweet in tweets.rows: 
-    timeline.insert(0, tweet)
+    timeline = []
+    tweets = db["posts"] 
+    for tweet in tweets.rows: 
+        timeline.insert(0, tweet)
 
-	return timeline
+    return timeline
 
 # Get all posts
 @hug.get('/posts/')
@@ -121,7 +120,7 @@ def postTweet(
 
     try:
         tweets.insert(tweet)
-		tweet["id"] = tweets.last_pk
+        tweet["id"] = tweets.last_pk
     except Exception as e:
         response.status = hug.falcon.HTTP_409
         return {"error": str(e)}
@@ -140,7 +139,7 @@ def reTweet(
 ):
     oldtweet = postsById(response, retweet_id, db)
     tweet_content = {"Retweet:": oldtweet}
-	tweetUrl=f"localhost:80/posts/{retweet_id}"
+    tweetUrl=f"localhost:80/posts/{retweet_id}"
     tweets = db["posts"]
 
     tweet = {
@@ -150,7 +149,7 @@ def reTweet(
 
     try:
         tweets.insert(tweet)
-		    tweet["id"] = tweets.last_pk
+        tweet["id"] = tweets.last_pk
         tweet["original_url"] = tweetUrl
     except Exception as e:
         response.status = hug.falcon.HTTP_409
@@ -159,3 +158,17 @@ def reTweet(
     response.set_header("Location", f"/posts/{tweet['id']}")
     return tweet
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# project 3
+
+#Registers this service with the registry service
+@hug.startup()
+def register():
+    url = socket.getfqdn() + os.environ["PORT"]
+    r = requests.post(config['registry']['register'], data={url:"posts"})
+
+#Returns a 200 ok and alive status 
+@hug.get("/health-check/")
+def healthCheck(response):
+    response.status = hug.falcon.HTTP_200
+    return {"status": "alive"}

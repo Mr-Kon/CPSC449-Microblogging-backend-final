@@ -9,10 +9,12 @@
 
 import configparser
 import logging.config
-from hug.authentication import authenticator
-from hug.directives import user
+import os
+import socket
+from falcon import response
 
 import hug
+import requests
 import sqlite_utils
 from sqlite_utils import Database
 import sqlite3
@@ -102,10 +104,25 @@ def addFollowing(
 def getfollowings(response, username:hug.types.text):
     following = []
     try:
-		follow = db["followingNames"].rows_where("username = ?", (username,))
-		for i in follow:
+        follow = db["followingNames"].rows_where("username = ?", (username,))
+        for i in follow:
             following.append(i["friendname"])
         
     except sqlite_utils.db.NotFoundError:
         response.status = hug.falcon.HTTP_404
     return {"following": following}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# project 3
+
+#Registers this service with the registry service
+@hug.startup()
+def register():
+    url = socket.getfqdn() + os.environ["PORT"]
+    r = requests.post(config['registry']['register'], data={url:"users"})
+
+#Returns a 200 ok and alive status 
+@hug.get("/health-check/")
+def healthCheck(response):
+    response.status = hug.falcon.HTTP_200
+    return {"status": "alive"}
