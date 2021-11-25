@@ -163,12 +163,12 @@ def reTweet(
 
 #Registers this service with the registry service
 @hug.startup()
-def register():
-    url = socket.getfqdn() + os.environ["PORT"]
+def register(response):
+    url = socket.getfqdn("localhost") +':'+ os.environ["PORT"]
     r = requests.post(config['registry']['register'], data={url:"posts"})
 
 #Returns a 200 ok and alive status 
-@hug.get("/health-check/")
+@hug.get("/posts/health-check/")
 def healthCheck(response):
     response.status = hug.falcon.HTTP_200
     return {"status": "alive"}

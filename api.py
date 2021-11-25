@@ -117,12 +117,15 @@ def getfollowings(response, username:hug.types.text):
 
 #Registers this service with the registry service
 @hug.startup()
-def register():
-    url = socket.getfqdn() + os.environ["PORT"]
-    r = requests.post(config['registry']['register'], data={url:"users"})
+def register(response):
+    url = socket.getfqdn("localhost") +':'+ os.environ["PORT"]
+    print(url)
+    d = {url : "users"}
+    r = requests.post(config['registry']['register'], data=d)
+    print(r.status_code, r.url)
 
 #Returns a 200 ok and alive status 
-@hug.get("/health-check/")
+@hug.get("/users/health-check/")
 def healthCheck(response):
     response.status = hug.falcon.HTTP_200
     return {"status": "alive"}

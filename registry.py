@@ -15,7 +15,8 @@ registry = {} #{url:serviceName}
 def healthChecker():
     while True:
         for url in registry:                            # goes through all urls in the registry
-            r = requests.get(url + "/health-check/")
+            print(registry[url])
+            r = requests.get('http://' + url + '/' + registry[url] + "/health-check/")
             if r.status_code != 200:                    # checks if response is valid
                 with lock:
                     registry.pop(url)                   #remove service from registry
@@ -25,23 +26,25 @@ def healthChecker():
 
 # 2a. Creates a daemon thread which preforms the check
 @hug.startup()
-def healthCheck():
+def healthCheck(response):
     x = threading.Thread(target=healthChecker, args=(), daemon=True)
     x.start()
 
 # 1. Handles service registration
 # TODO: Services will need to have a startup function to register
 #       Test
-@hug.post("/register/", status=hug.falcon.HTTP_201)
+@hug.post("/registry/register/", status=hug.falcon.HTTP_201)
 def register(response, service:hug.types.inline_dictionary):
-    if service not in registry:     # only registers a service if its not already registered
+    print(service)
+    print(service.items())
+    if service.items() not in registry.items():     # only registers a service if its not already registered
         #registry.append(service)
         registry.update(service)
         print(registry)
 
 # 3. Checks if a service is alive and its available instances
 # TODO: test
-@hug.get("/health-check/{service}")
+@hug.get("/registry/{service}")
 def getRegistry(response, service:hug.types.text):
     if service in registry.values():                #service exists
         response.status = hug.falcon.HTTP_200
