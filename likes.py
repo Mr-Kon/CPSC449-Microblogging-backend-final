@@ -9,10 +9,11 @@
 
 import configparser
 import logging.config
+import os
+import socket
 
 import hug
 from hug.directives import user
-import sqlite_utils
 import requests
 import json
 import redis
@@ -39,11 +40,6 @@ name3 = "UserLiked" # Set that has post ids for posts that the user liked
 # Arguments to inject into route functions
 #
 @hug.directive()
-def sqlite(section="postsdb", key="dbfile", **kwargs):
-    dbfile = config[section][key]
-    return sqlite_utils.Database(dbfile)
-
-@hug.directive()
 def log(name=__name__, **kwargs):
     return logging.getLogger(name)
 
@@ -57,7 +53,6 @@ def likeTweet(
     response,
     username: hug.types.text,
     tweetId: hug.types.text,
-    db: sqlite,
 ):
     # checking if user exists
     r = requests.get(f"http://localhost:5000/users/{username}")
@@ -155,3 +150,16 @@ def likeTweet(
         arr.append(tempPosts)
     popular_posts["Popular_Posts"] = arr
     return popular_posts
+
+#Registers this service with the registry service
+@hug.startup()
+def register(response):
+    url = socket.getfqdn("localhost") +':'+ os.environ["PORT"]
+    d = {'url':url,'service':'likes'}
+    r = requests.post(config['registry']['register'], data=d)
+
+#Returns a 200 ok and alive status 
+@hug.get("/posts/health-check/")
+def healthCheck(response):
+    response.status = hug.falcon.HTTP_200
+    return {"status": "alive"}

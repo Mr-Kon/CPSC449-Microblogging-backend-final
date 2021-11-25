@@ -5,6 +5,7 @@
 #### Brian Fang (brian.fang@csu.fullerton.edu)
 #### Nathan Tran (ntran402@csu.fullerton.edu)
 #### Ashkon Yavarinia (ashkon@csu.fullerton.edu)
+#### Edgar Cruz (ed.cruz76@csu.fullerton.edu)
 
 import configparser
 import logging.config
@@ -165,7 +166,8 @@ def reTweet(
 @hug.startup()
 def register(response):
     url = socket.getfqdn("localhost") +':'+ os.environ["PORT"]
-    r = requests.post(config['registry']['register'], data={url:"posts"})
+    d = {'url':url,'service':'posts'}
+    r = requests.post(config['registry']['register'], data=d)
 
 #Returns a 200 ok and alive status 
 @hug.get("/posts/health-check/")

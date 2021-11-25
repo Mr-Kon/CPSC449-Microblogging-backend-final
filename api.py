@@ -5,6 +5,7 @@
 #### Brian Fang (brian.fang@csu.fullerton.edu)
 #### Nathan Tran (ntran402@csu.fullerton.edu)
 #### Ashkon Yavarinia (ashkon@csu.fullerton.edu)
+#### Edgar Cruz (ed.cruz76@csu.fullerton.edu)
 
 
 import configparser
@@ -120,7 +121,7 @@ def getfollowings(response, username:hug.types.text):
 def register(response):
     url = socket.getfqdn("localhost") +':'+ os.environ["PORT"]
     print(url)
-    d = {url : "users"}
+    d = {'url':url,'service':'users'}
     r = requests.post(config['registry']['register'], data=d)
     print(r.status_code, r.url)
 

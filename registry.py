@@ -1,6 +1,11 @@
 #
 # CPSC449-Proj3
-# Registry
+# Registry API
+
+#### Brian Fang (brian.fang@csu.fullerton.edu)
+#### Nathan Tran (ntran402@csu.fullerton.edu)
+#### Ashkon Yavarinia (ashkon@csu.fullerton.edu)
+#### Edgar Cruz (ed.cruz76@csu.fullerton.edu)
 
 import hug
 import threading
@@ -34,13 +39,13 @@ def healthCheck(response):
 # TODO: Services will need to have a startup function to register
 #       Test
 @hug.post("/registry/register/", status=hug.falcon.HTTP_201)
-def register(response, service:hug.types.inline_dictionary):
-    print(service)
-    print(service.items())
-    if service.items() not in registry.items():     # only registers a service if its not already registered
-        #registry.append(service)
-        registry.update(service)
-        print(registry)
+def register(response, url:hug.types.text, service:hug.types.text):
+    print(url, service)
+    print(registry.items())
+    if url not in registry.items():     # only registers a service if its not already registered
+        registry.__setitem__(url,service)
+        #registry.update(service)
+        print(registry.items())
 
 # 3. Checks if a service is alive and its available instances
 # TODO: test
