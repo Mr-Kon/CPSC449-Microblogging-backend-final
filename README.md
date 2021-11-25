@@ -20,11 +20,11 @@
 >$ sudo systemctl restart haproxy
 >```
 
-- Navigate to the CPSC449-Proj2 directory and create the databases and start the servers
+- Navigate to the CPSC449-Proj3 directory and create the databases and start the servers
 
 >```shell-session
 >$ bash ./bin/init.sh
->$ foreman start -m users=1,posts=3,likes=1
+>$ foreman start -m users=1,posts=3,likes=1,polls=1
 >```
 Note- You may need to change file permissions to run/edit files
 
@@ -140,4 +140,32 @@ Retrieves a list of all the users that liked a given post as well as the total n
 Retrieves the most popular posts in the service. Shows posts with more liked first   
 > ```shell-session
 > $ http GET localhost:5200/posts/popular_posts
+> ```
+
+---
+# Polls
+
+## - Create a Poll
+**POST:** /polls/create  
+Authenticated users can create a new poll with 1 question and up to 4 responses
+> ```shell-session
+> $ http -f -a username:password POST localhost:80/polls/create question="poll_question" response1="response1" response2="response2" response3="response3" response4="response4"
+ex: question="What is your favorite color?" response1="Blue" response2="Green" response3="Red" response4=""
+> ```
+Note- pollTimeStamp will be returned when a poll is created. This is used to retrieve a poll and voting for a poll.
+
+## - Get a poll by key
+**GET:** /polls/getPoll  
+Get a poll by the compositeKey(pollTimeStamp, question)
+> ```shell-session
+> $ http -f GET localhost:80/polls/getPoll pollTimeStamp="time_stamp_when_poll_created" question="poll_question"
+ex: pollTimeStamp="2021-11-25 11:19:32.398902" question="What is your favorite color?"
+> ```
+
+## - Vote for a poll
+**PATCH:** /polls/vote  
+Authenticated users can vote for a response in a poll
+> ```shell-session
+> $ http -f -a username:password PATCH localhost:80/polls/vote pollTimeStamp="time_stamp_when_poll_created" question="poll_question" responseNum=#
+ex: pollTimeStamp="2021-11-25 11:19:32.398902" question="What is your favorite color?" responseNum=3
 > ```
