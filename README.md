@@ -169,3 +169,25 @@ Authenticated users can vote for a response in a poll
 > $ http -f -a username:password PATCH localhost:80/polls/vote pollTimeStamp="time_stamp_when_poll_created" question="poll_question" responseNum=#
 ex: pollTimeStamp="2021-11-25 11:19:32.398902" question="What is your favorite color?" responseNum=3
 > ```
+
+---
+# Registry
+
+## - Note:  
+The registry service assumes that each service defines a fixed URL ```/health-check``` that returns 200 for the registries health check process
+
+## - Register a service
+**POST:** /registry/register  
+Handles service registration done by services in the backend and should not normaly be accessed by users.
+> ```shell-session
+> $ http -f POST localhost:80/registry/register url="domainName:port" service="service"
+> ```
+>ex: url="localhost:5100" service="users"
+
+## - Check a services health
+**GET:** /registry/{service}  
+Checks if a service is alive and its available services.
+> ```shell-session
+> $ http GET localhost:80/registry/{service}
+> ```
+>ex: http GET localhost/registry/posts

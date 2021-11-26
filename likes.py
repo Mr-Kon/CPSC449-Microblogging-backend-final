@@ -159,7 +159,7 @@ def register(response):
     r = requests.post(config['registry']['register'], data=d)
 
 #Returns a 200 ok and alive status 
-@hug.get("/posts/health-check/")
+@hug.get("/likes/health-check/")
 def healthCheck(response):
     response.status = hug.falcon.HTTP_200
     return {"status": "alive"}

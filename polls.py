@@ -6,8 +6,8 @@
 
 import configparser
 import logging.config
-from hug.authentication import authenticator
-from hug.directives import user
+import os
+import socket
 
 import hug
 import requests
@@ -34,7 +34,7 @@ def log(name=__name__, **kwargs):
     return logging.getLogger(name)
 
 def auth(username, password):
-	r = requests.get(f"http://localhost:5000/users/{username}")
+	r = requests.get(config["users"]["url"]+username)#f"http://localhost:5000/users/{username}")
 	temp = json.loads(r.text)
 	user = temp["users"][0]
 	if user["password"] == password:
@@ -63,7 +63,7 @@ def getPoll(
                 'question' : question
             }
         )
-        item = response['Item']
+        item = response
     except Exception as e:
         response.status = hug.falcon.HTTP_409
         return {"error": str(e)}
@@ -163,3 +163,17 @@ def votePoll(
         return {"error": str(e)}
 
     return response
+
+
+#Registers this service with the registry service
+@hug.startup()
+def register(response):
+    url = socket.getfqdn("localhost") +':'+ os.environ["PORT"]
+    d = {'url':url,'service':'polls'}
+    r = requests.post(config['registry']['register'], data=d)
+
+#Returns a 200 ok and alive status 
+@hug.get("/polls/health-check/")
+def healthCheck(response):
+    response.status = hug.falcon.HTTP_200
+    return {"status": "alive"}
