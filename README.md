@@ -175,9 +175,9 @@ Note- pollTimeStamp will be returned when a poll is created. This is used to ret
 **GET:** /polls/getPoll  
 Get a poll by the compositeKey(pollTimeStamp, question)
 > ```shell-session
-> $ http -f GET localhost/polls/getPoll pollTimeStamp="time_stamp_when_poll_created" question="poll_question"
+> $ http -f GET localhost/polls/getPoll?pollTimeStamp=time_stamp_when_poll_created&question=poll_question
 > ```
-ex: pollTimeStamp="2021-11-25 11:19:32.398902" question="What is your favorite color?"
+ex: localhost:80/polls/getPoll?pollTimeStamp=2021-11-26 13:03:19.389194&question=Favorite Color?
 > ```
 
 ## - Vote for a poll
