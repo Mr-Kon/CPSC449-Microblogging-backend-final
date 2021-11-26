@@ -55,13 +55,13 @@ def likeTweet(
     tweetId: hug.types.text,
 ):
     # checking if user exists
-    r = requests.get(f"http://localhost:5000/users/{username}")
+    r = requests.get(f"http://localhost/users/{username}")
     temp = json.loads(r.text)
     if not temp["users"]: # temp returns an empty dict if empty
         response.status = hug.falcon.HTTP_404
         return {"error": "User not found"}
     # checking if tweet exists
-    r2 = requests.get(f"http://localhost:5100/posts/{tweetId}")
+    r2 = requests.get(f"http://localhost/posts/{tweetId}")
     temp2 = json.loads(r2.text)
     if not temp2:   #temp2 returns nothing if empty
         response.status = hug.falcon.HTTP_404
@@ -91,7 +91,7 @@ def likeTweet(
     username: hug.types.text,
 ):
     # checking if user exists
-    r = requests.get(f"http://localhost:5000/users/{username}")
+    r = requests.get(f"http://localhost/users/{username}")
     temp = json.loads(r.text)
     if not temp["users"]:
         response.status = hug.falcon.HTTP_404
@@ -103,7 +103,7 @@ def likeTweet(
     arr = []
     id_of_likedPosts = list(red2.smembers(username))
     # Getting the posts here
-    req = requests.get(f"http://localhost:5100/posts/")
+    req = requests.get(f"http://localhost/posts/")
     tempPosts = json.loads(req.text)
     for post in tempPosts["tweets"]:
         if str(post["id"]) in list(red2.smembers(username)):
@@ -119,7 +119,7 @@ def likeTweet(
 ):
     red = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
     # check if post exists 
-    r = requests.get(f"http://localhost:5100//posts/{tweetId}")
+    r = requests.get(f"http://localhost//posts/{tweetId}")
     temp = json.loads(r.text)
     if not temp:
         response.status = hug.falcon.HTTP_404
@@ -144,7 +144,7 @@ def likeTweet(
     allPosts = red1.zrevrange(name2, 0, -1, withscores=True) # Tuple
     # Getting the posts here
     for post in allPosts:
-        req = requests.get(f"http://localhost:5100/posts/{post[0]}")
+        req = requests.get(f"http://localhost/posts/{post[0]}")
         tempPosts = json.loads(req.text)
         tempPosts["likes"] = post[1]
         arr.append(tempPosts)
