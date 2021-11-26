@@ -48,7 +48,7 @@ def log(name=__name__, **kwargs):
 
 
 # Route for liking tweets
-@hug.post("/{username}/{tweetId}", status=hug.falcon.HTTP_201)
+@hug.post("/likes/{username}/{tweetId}", status=hug.falcon.HTTP_201)
 def likeTweet(
     response,
     username: hug.types.text,
@@ -85,7 +85,7 @@ def likeTweet(
     return likedPosts
 
 # Route for getting liked tweets for a given user
-@hug.get("/{username}/liked_posts")
+@hug.get("/likes/{username}/liked_posts")
 def likeTweet(
     response,
     username: hug.types.text,
@@ -112,7 +112,7 @@ def likeTweet(
     return liked_posts
 
 # Route for getting all the likes for a given
-@hug.get("/posts/{tweetId}/likes")
+@hug.get("/likes/posts/{tweetId}/likes")
 def likeTweet(
     response,
     tweetId: hug.types.text,
@@ -134,7 +134,7 @@ def likeTweet(
 
 
 # Route for getting posts sorted by amount of likes, post wont show if 0 likes
-@hug.get("/posts/popular_posts")
+@hug.get("/likes/posts/popular_posts")
 def likeTweet(
     response,
 ):
