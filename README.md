@@ -131,28 +131,28 @@ Retrieves a list of all posts in reverse chronological order
 # Likes
 
 ## - Liking Tweets
-**POST:** /{username}/{tweetId}  
+**POST:** /likes/{username}/{tweetId}  
 Likes a specific post as a given user and updates redis values  
 > ```shell-session
 > $ http POST localhost:5200/Ashkon/5
 > ```
 
 ## - Retrieve tweets that a user liked
-**GET:** /{username}/liked_posts  
+**GET:** /likes/{username}/liked_posts  
 Retrieves a list of all the posts that a given user has liked  
 > ```shell-session
 > $ http GET localhost:5200/Ashkon/liked_posts
 > ```
 
 ## - Retrieve likes for a tweet
-**GET:** /posts/{tweetId}/likes  
+**GET:** /likes/posts/{tweetId}/likes  
 Retrieves a list of all the users that liked a given post as well as the total number of likes  
 > ```shell-session
 > $ http GET localhost:5200/posts/4/likes
 > ```
 
 ## - Retrieve popular posts
-**GET:** /posts/popular_posts  
+**GET:** /likes/posts/popular_posts  
 Retrieves the most popular posts in the service. Shows posts with more liked first   
 > ```shell-session
 > $ http GET localhost:5200/posts/popular_posts
