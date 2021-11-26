@@ -11,10 +11,25 @@
 >$ sudo apt install --yes python3-pip ruby-foreman httpie sqlite3
 >$ python3 -m pip install hug sqlite-utils
 >$ sudo apt install --yes haproxy gunicorn
+>$ sudo apt install --yes redis python3-hiredis awcli python3-boto3
 >```
 
+- Configure AWS
+>```shell-session
+>$ aws configure
+>$ AWS Access Key ID [None]: fakeMyKeyId
+>$ AWS Secret Access Key [None]: fakeSecretAccessKey
+>$ Default region name [None]: us-west-2
+>$ Default output format [None]: table
+>```
+
+- Download the proper DynamoDB package for your system from https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html
+- Extract the package, navigate to the location of DynamoDBLocal.jar, and enter the following command:
+>```shell-session
+>$ java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
+
 - Navigate to /etc/haproxy/haproxy.cfg and paste the contents of etc/haproxy.cfg in the bottom and restart
-- Port 80 is the new port for both api's while haproxy is runing
+- Port 80 is the new port for both api's while haproxy is running
 
 >```shell-session
 >$ sudo systemctl restart haproxy
@@ -26,7 +41,7 @@
 >$ bash ./bin/init.sh
 >$ foreman start -m users=1,posts=3,likes=1,polls=1
 >```
-Note- You may need to change file permissions to run/edit files
+Note - You may need to change file permissions to run/edit files
 
 ---
 # Users
