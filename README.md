@@ -14,6 +14,13 @@
 >$ sudo apt install --yes redis python3-hiredis awcli python3-boto3
 >```
 
+- Navigate to /etc/haproxy/haproxy.cfg and paste the contents of etc/haproxy.cfg in the bottom and restart
+- Port 80 is the new port for both api's while haproxy is running
+
+>```shell-session
+>$ sudo systemctl restart haproxy
+>```
+
 - Configure AWS
 >```shell-session
 >$ aws configure
@@ -28,12 +35,6 @@
 >```shell-session
 >$ java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
 
-- Navigate to /etc/haproxy/haproxy.cfg and paste the contents of etc/haproxy.cfg in the bottom and restart
-- Port 80 is the new port for both api's while haproxy is running
-
->```shell-session
->$ sudo systemctl restart haproxy
->```
 
 - Navigate to the CPSC449-Proj3 directory and create the databases and start the servers
 
