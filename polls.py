@@ -75,12 +75,12 @@ def getPoll(
 @hug.post("/polls/create/", status=hug.falcon.HTTP_201, requires=hug.authentication.basic(auth))
 def createPoll(
     response,
-    question : hug.types.text,
-    response1 : hug.types.text,
-    response2 : hug.types.text,
-    response3 : hug.types.text,
-    response4 : hug.types.text,
     db : dynamodb,
+    question : hug.types.text,
+    response1 : hug.types.text="",
+    response2 : hug.types.text="",
+    response3 : hug.types.text="",
+    response4 : hug.types.text="",
 ):
     usersList = []
     poll = None
