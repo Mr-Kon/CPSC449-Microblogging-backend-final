@@ -45,7 +45,7 @@ def auth(username, password):
 #
 
 # Gets a poll based on composite_key(pollTimeStamp, question)
-@hug.get("/polls/getPoll/", status=hug.falcon.HTTP_201)
+@hug.get("/polls/getPoll/", status=hug.falcon.HTTP_201, examples="pollTimeStamp=time_stamp_string&question=question_string")
 def getPoll(
     response,
     pollTimeStamp : hug.types.text,
