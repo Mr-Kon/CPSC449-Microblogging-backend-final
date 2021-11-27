@@ -40,7 +40,7 @@
 
 >```shell-session
 >$ bash ./bin/init.sh
->$ foreman start -m users=1,posts=3,likes=1,polls=1
+>$ foreman start -m users=1,posts=3,likes=1,polls=1,registry=1
 >```
 Note - You may need to change file permissions to run/edit files
 
