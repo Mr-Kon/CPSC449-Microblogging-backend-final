@@ -1,8 +1,11 @@
 #
-# Users API
-#
-#
-#
+# CPSC449-Proj3
+# Polls API
+
+#### Brian Fang (brian.fang@csu.fullerton.edu)
+#### Nathan Tran (ntran402@csu.fullerton.edu)
+#### Ashkon Yavarinia (ashkon@csu.fullerton.edu)
+#### Edgar Cruz (ed.cruz76@csu.fullerton.edu)
 
 import configparser
 import logging.config
