@@ -197,7 +197,7 @@ The registry service assumes that each service defines a fixed URL ```/health-ch
 
 ## - Register a service
 **POST:** /registry/register  
-Handles service registration done by services in the backend and should not normaly be accessed by users.
+Handles service registration done by services in the backend and should not normally be accessed by users.
 > ```shell-session
 > $ http -f POST localhost/registry/register url="domainName:port" service="service"
 > ```
