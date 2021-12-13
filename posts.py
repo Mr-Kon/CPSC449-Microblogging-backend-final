@@ -17,6 +17,7 @@ import sqlite_utils
 import requests
 import json
 
+import greenstalk
 # Load configuration
 #
 config = configparser.ConfigParser()
@@ -34,6 +35,11 @@ def sqlite(section="postsdb", key="dbfile", **kwargs):
 @hug.directive()
 def log(name=__name__, **kwargs):
     return logging.getLogger(name)
+
+@hug.directive()
+def greenstalkClient(**kwargs):
+    client = greenstalk.Client(('127.0.0.1', 11300))
+    return client
 
 # Authorization function
 def auth(username, password):
@@ -174,3 +180,28 @@ def register(response):
 def healthCheck(response):
     response.status = hug.falcon.HTTP_200
     return {"status": "alive"}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# project 4
+
+#An async endpoint to insert a new job into the worker program
+@hug.post("/posts/async", status=hug.falcon.HTTP_202, requires=hug.authentication.basic(auth))
+def postTweetAsync(
+    response,
+    username: hug.types.text,
+    user: hug.directives.user,
+    tweet_content: hug.types.text,
+    client: greenstalkClient,
+):
+    # Create job body object
+    body = {
+        "username" : user["username"],
+        "password" : user["password"],
+        "tweet_content": tweet_content,
+    }
+
+    # Put job into client's work queue
+    client.put(json.dumps(body))
+
+    response.status = hug.falcon.HTTP_202
+    return {"message" : "Job Accepted."}
