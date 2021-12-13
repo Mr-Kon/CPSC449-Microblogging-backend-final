@@ -132,8 +132,16 @@ Retrieves a list of all posts in reverse chronological order
 
 ## - Liking Tweets
 **POST:** /likes/{username}/{tweetId}  
-Likes a specific post as a given user and updates redis values  
+Likes a specific post as a given user and updates redis values. No longer checks for valid user.    
 > ```shell-session
+> $ http POST localhost/likes/Ashkon/5
+> ```
+
+## - Async Liking Tweets
+**POST:** /likes/async_like/{username}/{tweetId}  
+Likes tweet and sets worker to check if tweetId is valid. Start consumer before calling endpoint.    
+> ```shell-session
+> $ python3 likesConsumer.py
 > $ http POST localhost/likes/Ashkon/5
 > ```
 
