@@ -1,4 +1,4 @@
-# CPSC449-Proj3
+# CPSC449-Proj4
 
 #### Brian Fang (brian.fang@csu.fullerton.edu)
 #### Nathan Tran (ntran402@csu.fullerton.edu)
@@ -22,6 +22,7 @@
 >```
 
 - Configure AWS
+
 >```shell-session
 >$ aws configure
 >$ AWS Access Key ID [None]: fakeMyKeyId
@@ -32,15 +33,22 @@
 
 - Download the proper DynamoDB package for your system from https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html
 - Extract the package, navigate to the location of DynamoDBLocal.jar, and enter the following command:
+
 >```shell-session
 >$ java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
 
+- Install Beanstalkd and GreenStalk
+
+>```shell-session
+$ sudo apt update
+$ sudo apt install --yes beanstalkd
+$ python3 -m pip install greenstalk
 
 - Navigate to the CPSC449-Proj3 directory and create the databases and start the servers
 
 >```shell-session
 >$ bash ./bin/init.sh
->$ foreman start -m users=1,posts=3,likes=1,polls=1,registry=1
+>$ foreman start -m users=1,posts=3,likes=1,polls=1,registry=1,posts_worker.py
 >```
 Note - You may need to change file permissions to run/edit files
 
@@ -82,6 +90,12 @@ Gets a list of users someone is following
 **POST:** /posts/ Creates a new post and inserts it into posts.db
 > ```shell-session
 > $ http -f -a username:password POST localhost/posts/ username="username" tweet_content="content"
+> ```
+
+## - Asynchronous Tweeting
+**POST:** /posts/async Asynchronously creates a new post and inserts it into posts.db
+> ```shell-session
+> $ http -f -a username:password POST localhost/posts/async username="username" tweet_content="content"
 > ```
 
 ## - Retweeting
