@@ -40,9 +40,10 @@
 - Install Beanstalkd and GreenStalk
 
 >```shell-session
-$ sudo apt update
-$ sudo apt install --yes beanstalkd
-$ python3 -m pip install greenstalk
+>$ sudo apt update
+>$ sudo apt install --yes beanstalkd
+>$ python3 -m pip install greenstalk
+>```
 
 - Navigate to the CPSC449-Proj3 directory and create the databases and start the servers
 
