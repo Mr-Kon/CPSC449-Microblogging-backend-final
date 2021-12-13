@@ -9,6 +9,7 @@
 
 import greenstalk
 import json
+import smtplib
 import requests
 
 def createPost(username, password, tweet_content):
@@ -28,10 +29,27 @@ with greenstalk.Client(('127.0.0.1', 11300)) as client:
         data = json.loads(job.body)
         statusCode = createPost(data['username'], data['password'], data['tweet_content'])
 
+        #Connect to email server and set the destination address
+        destinationAddress = data['username'] + "@gmail.com"
+        server = smtplib.SMTP('localhost:5600')
+        server.ehlo()
+        server.set_debuglevel(1)
+        message = "From: Project4Backend@csu.fullerton.edu\nTo: " + destinationAddress
+
         #If post is created successfully, statusCode=201 will be returned
         if(statusCode == 201):
             #Delete job if it has successfully completed
             client.delete(job)
+            #Notify user of the successful post
+            message = message + "\n\nYou successfully posted a tweet!"
+            server.sendmail("Project4Backend@csu.fullerton.edu", destinationAddress,
+                message)
+            server.quit()
         else:
             #Release job back into pool if it failed
             client.release(job)
+            #Notify use of the failed post
+            message = message + "\n\nYou encountered an error when posting a tweet."
+            server.sendmail("Project4Backend@csu.fullerton.edu", destinationAddress,
+                message)
+            server.quit()
