@@ -17,6 +17,7 @@ from hug.directives import user
 import requests
 import json
 import redis
+import greenstalk
 
 
 # Load configuration
@@ -47,26 +48,13 @@ def log(name=__name__, **kwargs):
 # Routes
 
 
-# Route for liking tweets
+# Route for liking tweets, changed from before. No longer checks for valid user/post
 @hug.post("/likes/{username}/{tweetId}", status=hug.falcon.HTTP_201)
 def likeTweet(
     response,
     username: hug.types.text,
     tweetId: hug.types.text,
 ):
-    # checking if user exists
-    r = requests.get(f"http://localhost/users/{username}")
-    temp = json.loads(r.text)
-    if not temp["users"]: # temp returns an empty dict if empty
-        response.status = hug.falcon.HTTP_404
-        return {"error": "User not found"}
-    # checking if tweet exists
-    r2 = requests.get(f"http://localhost/posts/{tweetId}")
-    temp2 = json.loads(r2.text)
-    if not temp2:   #temp2 returns nothing if empty
-        response.status = hug.falcon.HTTP_404
-        return {"error": "Post not found"}
-
     # Setting data for redis
 
     # If statment tries to insert into set
@@ -83,6 +71,20 @@ def likeTweet(
     likedPosts = {}
     likedPosts["Liked_Posts"] = red2.smembers(username)
     return likedPosts
+
+
+# Route for async liking tweets, returns 202 regardless if post is valid
+@hug.post("/likes/async_like/{username}/{tweetId}", status=hug.falcon.HTTP_201)
+def likeTweet(
+    response,
+    username: hug.types.text,
+    tweetId: hug.types.text,
+):
+    userAndtweet = username + ',' + tweetId
+    with greenstalk.Client(('127.0.0.1', 11300)) as client:
+        # Producer
+        client.put(userAndtweet)
+    return hug.falcon.HTTP_202 
 
 # Route for getting liked tweets for a given user
 @hug.get("/likes/{username}/liked_posts")
@@ -119,7 +121,7 @@ def likeTweet(
 ):
     red = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
     # check if post exists 
-    r = requests.get(f"http://localhost//posts/{tweetId}")
+    r = requests.get(f"http://localhost/posts/{tweetId}")
     temp = json.loads(r.text)
     if not temp:
         response.status = hug.falcon.HTTP_404
