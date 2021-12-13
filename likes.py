@@ -92,12 +92,12 @@ def likeTweet(
     response,
     username: hug.types.text,
 ):
-    # checking if user exists
-    r = requests.get(f"http://localhost/users/{username}")
-    temp = json.loads(r.text)
-    if not temp["users"]:
-        response.status = hug.falcon.HTTP_404
-        return {"error": "User not found"}
+    ##### checking if user exists, commented out ######
+    # r = requests.get(f"http://localhost/users/{username}")
+    # temp = json.loads(r.text)
+    # if not temp["users"]:
+    #     response.status = hug.falcon.HTTP_404
+    #     return {"error": "User not found"}
 
 
     # Preparing data types for the result
