@@ -10,6 +10,7 @@
 import configparser
 import logging.config
 import os
+import re
 import socket
 
 import hug
@@ -193,15 +194,30 @@ def postTweetAsync(
     tweet_content: hug.types.text,
     client: greenstalkClient,
 ):
-    # Create job body object
-    body = {
-        "username" : user["username"],
-        "password" : user["password"],
-        "tweet_content": tweet_content,
-    }
+    pattern = "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
+    try:
+        # Create job body object
+        body = {
+            "username" : user["username"],
+            "password" : user["password"],
+            "text": tweet_content,
+        }
 
-    # Put job into client's work queue
-    client.put(json.dumps(body))
+        poll = re.findall(pattern, tweet_content) 
+        if poll:
+            print('poll post')
+            # Put job into polls work queue
+            client.use('polls')
+            client.put(json.dumps(body))
+            print('post end')
+        else:
+            print('reg post')
+            # Put job into posts work queue
+            client.use('posts')
+            client.put(json.dumps(body))
+    except Exception as e:
+        response.status = hug.falcon.HTTP_409
+        return {"error": str(e)}
 
     response.status = hug.falcon.HTTP_202
     return {"message" : "Job Accepted."}

@@ -15,7 +15,7 @@ name2 = "PopularPosts"
 name3 = "UserLiked"
 
 #Producer is expecting 2 strings separated by comma
-with greenstalk.Client(('127.0.0.1', 11300)) as client:
+with greenstalk.Client(('127.0.0.1', 11300), watch='likes') as client:
     while True:
         job = client.reserve()
         userAndtweet = job.body.split(",")  # [0] = username, and [1] = tweet id

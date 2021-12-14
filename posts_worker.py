@@ -22,12 +22,12 @@ def createPost(username, password, tweet_content):
 
     return r.status_code
 
-with greenstalk.Client(('127.0.0.1', 11300)) as client:
+with greenstalk.Client(('127.0.0.1', 11300), watch='posts') as client:
     while(True) :
         # Grab job from client reserve
         job = client.reserve()
         data = json.loads(job.body)
-        statusCode = createPost(data['username'], data['password'], data['tweet_content'])
+        statusCode = createPost(data['username'], data['password'], data['text'])
 
         #Connect to email server and set the destination address
         destinationAddress = data['username'] + "@gmail.com"

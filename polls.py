@@ -59,18 +59,19 @@ def getPoll(
     item = None
 
     #Query table based on composite_key(pollTimeStamp, question)
-    try:
-        response = table.get_item(
-            Key={
-                'pollTimeStamp' : pollTimeStamp,
-                'question' : question
-            }
-        )
-        item = response
-    except Exception as e:
+    result = table.get_item(
+        Key={
+            'pollTimeStamp' : pollTimeStamp,
+            'question' : question
+        }
+    )
+
+    if 'Item' in result:
+        item = result
+        return item
+    else:
         response.status = hug.falcon.HTTP_409
-        return {"error": str(e)}
-    return item
+        return {"error": 'poll not found'}
 
 
 

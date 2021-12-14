@@ -81,7 +81,7 @@ def likeTweet(
     tweetId: hug.types.text,
 ):
     userAndtweet = username + ',' + tweetId
-    with greenstalk.Client(('127.0.0.1', 11300)) as client:
+    with greenstalk.Client(('127.0.0.1', 11300), use='likes') as client:
         # Producer
         client.put(userAndtweet)
     return hug.falcon.HTTP_202 
