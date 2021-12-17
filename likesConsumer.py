@@ -25,26 +25,32 @@ with greenstalk.Client(('127.0.0.1', 11300), watch='likes') as client:
         r = requests.get(f"http://localhost/posts/{userAndtweet[1]}")
         temp = json.loads(r.text)
 
-        #Connect to email server and set the destination address
-        destinationAddress = userAndtweet[0] + "@gmail.com"
+        #Connect to email server
         server = smtplib.SMTP('localhost:5600')
         server.ehlo()
         server.set_debuglevel(1)
-        message = "From: Project4Backend@csu.fullerton.edu\nTo: " + destinationAddress
+
+        #finds email of user posting
+        username = userAndtweet[0]
+        r = requests.get('http://localhost/users/'+username)
+        temp = json.loads(r.text)
+        user = temp["users"][0]
+        email = user["email"]
+        message = "From: Project4Backend@csu.fullerton.edu\nTo: " + email
 
         if not temp:   #temp2 returns nothing if empty
             ############## SEND EMAIL FOR FAILURE HERE ################
             print ("DOES NOT EXIST")
 
             message = message + "\n\nYou attempted to like a post that doesn't exist."
-            server.sendmail("Project4Backend@csu.fullerton.edu", destinationAddress,
+            server.sendmail("Project4Backend@csu.fullerton.edu", email,
                 message)
             server.quit()
         else:
             print("SUCCESS!")
 
             message = message + "\n\nYou successfully liked a post!"
-            server.sendmail("Project4Backend@csu.fullerton.edu", destinationAddress,
+            server.sendmail("Project4Backend@csu.fullerton.edu", email,
                 message)
             server.quit()
 
