@@ -7,3 +7,4 @@ polls: gunicorn --access-logfile - --capture-output -p $PORT polls:__hug_wsgi__
 email: python3 -m smtpd -n -c DebuggingServer localhost:5600
 posts_worker: python3 posts_worker.py
 polls_consumer: python3 pollsConsumer.py
+likes_consumer: python3 likesConsumer.py
