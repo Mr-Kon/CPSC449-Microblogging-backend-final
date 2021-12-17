@@ -156,7 +156,7 @@ Likes a specific post as a given user and updates redis values. No longer checks
 **POST:** /likes/async_like/{username}/{tweetId}  
 Likes tweet and sets worker to check if tweetId is valid. Start consumer before calling endpoint.    
 > ```shell-session
-> $ http POST localhost/likes/Ashkon/5
+> $ http POST localhost/likes/async_like/Ashkon/5
 > ```
 
 ## - Retrieve tweets that a user liked
