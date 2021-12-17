@@ -33,8 +33,8 @@ with greenstalk.Client(('127.0.0.1', 11300), watch='likes') as client:
         #finds email of user posting
         username = userAndtweet[0]
         r = requests.get('http://localhost/users/'+username)
-        temp = json.loads(r.text)
-        user = temp["users"][0]
+        tempMail = json.loads(r.text)
+        user = tempMail["users"][0]
         email = user["email"]
         message = "From: Project4Backend@csu.fullerton.edu\nTo: " + email
 
