@@ -47,7 +47,7 @@ with greenstalk.Client(('127.0.0.1', 11300), watch='polls') as client:
 
         else:
             #send fail email
-            message += "\n\nYou tried to post invalid poll."
+            message += "\n\nYou tried to post an invalid poll."
             server.sendmail("Project4Backend@csu.fullerton.edu", email, message)
             server.quit()
             
