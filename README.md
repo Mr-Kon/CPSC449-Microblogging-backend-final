@@ -49,7 +49,7 @@
 
 >```shell-session
 >$ bash ./bin/init.sh
->$ foreman start -m registry=1,users=1,posts=3,likes=1,polls=1,posts_worker=1,polls_consumer=1
+>$ foreman start -m registry=1,users=1,posts=3,likes=1,polls=1,email=1,posts_worker=1,polls_consumer=1
 >```
 Note - You may need to change file permissions to run/edit files
 

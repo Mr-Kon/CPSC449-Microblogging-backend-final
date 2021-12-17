@@ -10,7 +10,7 @@ pattern = "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a
 
 with greenstalk.Client(('127.0.0.1', 11300), watch='polls') as client:
     #open connection to db
-    db = Database(sqlite3.connect("./var/users.db"))
+    db = Database(sqlite3.connect("./var/posts.db"))
     posts = db['posts']
 
     #Connect to email server and set the destination address
@@ -26,8 +26,10 @@ with greenstalk.Client(('127.0.0.1', 11300), watch='polls') as client:
 
         #finds email of user posting 
         username = data["username"]
-        email = db.query("SELECT email FROM users WHERE username = ?", (username,)) #db['users'].rows_where("username = :username", {"username": username}, select='email')
-        email = next(email)['email']
+        r = requests.get('http://localhost/users/'+username)
+        temp = json.loads(r.text)
+        user = temp["users"][0]
+        email = user["email"]
         message = "From: Project4Backend@csu.fullerton.edu\nTo: " + email
     
         #verifies if poll is valid
@@ -35,8 +37,8 @@ with greenstalk.Client(('127.0.0.1', 11300), watch='polls') as client:
         r = requests.get(poll)
         if r.status_code == 201:
             #posts the tweet
-            '''posts.insert(data)
-            data["id"] = posts.last_pk'''
+            posts.insert(data)
+            data["id"] = posts.last_pk
 
             #send success email
             message += "\n\nYou successfully posted a poll!"
@@ -48,4 +50,5 @@ with greenstalk.Client(('127.0.0.1', 11300), watch='polls') as client:
             message += "\n\nYou tried to posted invalid poll."
             server.sendmail("Project4Backend@csu.fullerton.edu", email, message)
             server.quit()
+            
         client.delete(job)

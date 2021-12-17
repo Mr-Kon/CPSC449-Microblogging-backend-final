@@ -1,5 +1,5 @@
 #
-# CPSC449-Proj2
+# CPSC449-Proj4
 # Timeline API 
 
 #### Brian Fang (brian.fang@csu.fullerton.edu)
@@ -197,12 +197,17 @@ def postTweetAsync(
     pattern = "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
     try:
         # Create job body object
-        body = {
+        '''body = {
             "username" : user["username"],
             "password" : user["password"],
             "text": tweet_content,
-        }
+        }'''
 
+        body = {
+            "username": username,
+            "text": tweet_content,
+        }
+    
         poll = re.findall(pattern, tweet_content) 
         if poll:
             print('poll post')
